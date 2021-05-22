@@ -1,0 +1,87 @@
+<div class="content">
+    <div class="left">
+        <h3 class="title">New Task</h3>
+        <div class="form">
+            <form [formGroup]="form">
+                <div class="item">
+                    <input placeholder="Add new task ..." class="input-text" formControlName="title" />
+                    <b class="error" *ngIf="isSubmmited && form.controls.title.errors?.required">Task name is
+                        required</b>
+                    <label class="label">Description</label>
+                    <textarea placeholder="Add new task ..." formControlName="description"></textarea>
+                    <div class="last-row">
+                        <div class="item">
+                            <label class="label">Due date</label>
+                            <input type="date" formControlName="dueDate" [min]="toDateInputValue()" />
+                        </div>
+                        <div class="item">
+                            <div class="label">Priority</div>
+                            <select formControlName="priority">
+                                <option value="low">Low</option>
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="div-btn">
+                    <button (click)="submit()">Add</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="right">
+        <h3 class="title">To Do List</h3>
+        <div style="padding: 30px;">
+            <input placeholder="Search ..." class="input-search" (input)="filterToDo($event.target.value)"/>
+            <div class="todo-list">
+                <div class="item" *ngFor="let todo of todoList; index as i">
+                    <div class="header">
+                        <input type="checkbox" (input)="selectedItem($event.target.checked, todo)">
+                        <label class="label-checkbox"> {{todo.title}}</label>
+                        <button class="btn-detail" (click)="tabDetailOpen = i">Detail</button>
+                        <button class="btn-remove" (click)="remove(todo)">Remove</button>
+                    </div>
+                    <div class="todo-item" *ngIf="tabDetailOpen === i">
+                        <div style="width: 100%;">
+                            <input placeholder="Task ..." class="input-text" [value]="todo.title"
+                                (input)="changeData($event.target.value, 'title', i)" />
+                            <label class="label">Description</label>
+                            <textarea placeholder="Add new task ..." [value]="todo.description"
+                                (input)="changeData($event.target.value, 'decription', i)"></textarea>
+                            <div class="last-row">
+                                <div class="item">
+                                    <label class="label">Due date</label>
+                                    <input type="date" [value]="todo.dueDate" [min]="toDateInputValue()"
+                                        (input)="changeData($event.target.value, 'dueDate', i)" />
+                                </div>
+                                <div class="item">
+                                    <div class="label">Priority</div>
+                                    <select [value]="todo.priority"
+                                        (input)="changeData($event.target.value, 'priority', i)">
+                                        <option value="low">Low</option>
+                                        <option value="normal">Normal</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="div-btn">
+                                <button (click)="update(i)">Update</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action" *ngIf="listSelected.length">
+            <div>Bulk Action:</div>
+            <button class="btn-done">Detail</button>
+            <button class="btn-remove-list" (click)="removeList()">Remove</button>
+        </div>
+
+    </div>
+</div>
